@@ -1,0 +1,6 @@
+{
+  "require": {
+    "lit/litms": "dev-master",
+    "lit/litool": "dev-master"
+  }
+}
