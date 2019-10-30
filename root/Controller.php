@@ -17,8 +17,16 @@ class Controller extends Lit\LitMs\LitMsController {
         });
 
 
-        $this->get('/vagrant/BoxList',function (){
+        $this->get('/vagrant/boxList',function (){
             return Model("Vagrant")->vagrantBoxList();
+        });
+
+        $this->post('/vagrant/submitAdd',function ($request,&$response){
+            return Model("Vagrant")->vagrantAddVm($request);
+        });
+
+        $this->get('/vagrant/vmList',function (){
+            return Model("Vagrant")->vagrantVmList();
         });
 
     }

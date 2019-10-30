@@ -12,4 +12,15 @@ define("LITMS_DAEMONIZE", false);
 define("SWOOLE_SERVER_SET",array(
 ));
 
-define("VAGRANT_ROOT","/User/ghost/vagrant");
+//自定义常量
+define("VAGRANT_ROOT","/home/ghost/vagrant/");  //vagrant 文件保存目录
+
+define("VAGRANT_DATA_DIR",__DIR__.DIRECTORY_SEPARATOR."Data".DIRECTORY_SEPARATOR); //临时文件保存目录
+
+//服务所读取文件限制(安全)目录
+//目录名称请以目录分隔符(DIRECTORY_SEPARATOR)结尾
+define("LITMS_OPEN_BASEDIR",array(
+    __DIR__.DIRECTORY_SEPARATOR, // 当前项目目录
+    dirname(__DIR__).DIRECTORY_SEPARATOR."vendor".DIRECTORY_SEPARATOR, // vendor目录
+    VAGRANT_ROOT, //Vagrant 保存目录
+));
