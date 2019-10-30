@@ -12,6 +12,7 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
         $vagrantConfig['cpuNum'] = $request->post["cpuNum"];
         $vagrantConfig['memNum'] = $request->post["memNum"];
         $vagrantConfig['opSystem'] = $request->post["opSystem"];
+        $vagrantConfig['netCard'] = $request->post["netCard"];
 
         $hostId = Model("Vagrant")->vagrantInit($vagrantConfig);
         if( $hostId == -1 ){
@@ -21,7 +22,7 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
         }elseif($hostId == -3){
             return Error(0,"创建 Vagrant 目录失败");
         }else{
-//            Model("Vagrant")->vagrantUp($hostId);
+            Model("Vagrant")->vagrantUp($hostId);
             return Success(["hostId"=>$hostId]);
         }
     }
@@ -78,6 +79,16 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
             }
         }
         return Success($vmList);
+    }
+
+    //网卡列表
+    function netCardList () {
+        $cardList = Model("System")->getNetCardName();
+        if(empty($cardList)){
+            return Error(0,[]);
+        }else{
+            return Success ($cardList);
+        }
     }
 
 }

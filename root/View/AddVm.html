@@ -17,15 +17,33 @@
         $(document).ready(function(){
             //操作系统列表
             $.ajax({
-                type:'get',
-                url:"/api/opSystemList",
-                cache: false,
-                dataType:'json',
+                type:'get', url:"/api/opSystemList", cache: false, dataType:'json',
                 success:function(sjson){
                     if(sjson.success == 1){
                         for( i = 0; i< sjson.response.boxList.length ; i ++ ){
-                            $("#opSystemList").append("<option name=\"opSystem\">"+sjson.response.boxList[i]+"</option>");
+                            opName = sjson.response.boxList[i];
+                            $("#opSystemList").append("<option value=\""+opName+"\">"+opName+"</option>");
                         }
+                    }else{
+                        alert("获取操作系统列表失败(api)")
+                    }
+                },
+                error:function(){
+                    alert("获取操作系统列表失败")
+                }
+            });
+
+            //网卡列表
+            $.ajax({
+                type:'get', url:"/api/netCardList", cache: false, dataType:'json',
+                success:function(sjson){
+                    if(sjson.success == 1){
+                        for( i = 0; i< sjson.response.length ; i ++ ){
+                            cardName = sjson.response[i];
+                            $("#netCardList").append("<option value=\""+cardName+"\">"+cardName+"</option>");
+                        }
+                    }else{
+                        alert("获取操作系统列表失败(api)")
                     }
                 },
                 error:function(){
@@ -121,6 +139,15 @@
                 <label class="radio-inline">
                     <input type="radio" name="memNum" id="memNum8192M" value="8192"> 8G
                 </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">桥接网卡</label>
+            <div class="col-sm-2">
+                <select id="netCardList" class="form-control" name="netCard">
+
+                </select>
             </div>
         </div>
 

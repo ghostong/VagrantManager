@@ -17,8 +17,8 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
 
     //vagrant init
     function vagrantInit($vagrantConfig){
-        $vagrantConfig['hostId'] = uniqid();
-        $vagrantConfig['hostName'] = $vagrantConfig['hostId'] ;
+        $vagrantConfig['hostId'] = isset($vagrantConfig['hostId'])?$vagrantConfig['hostId']:uniqid();
+        $vagrantConfig['hostName'] = isset($vagrantConfig['hostName'])?$vagrantConfig['hostName']:$vagrantConfig['hostId'] ;
         $string = file_get_contents(VAGRANT_DATA_DIR."Vagrantfile");
         $vagrantFileString = \Lit\Litool\LiString::ReplaceStringVariable($string,$vagrantConfig);
         $vagrantDir = $this->getVagrantDir($vagrantConfig['hostId']);
@@ -26,8 +26,9 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
             return -1;
         }
         if(mkdir($vagrantDir)){
-            $vagrantFile = $vagrantDir."Vagrantfile";
+            $vagrantFile = $this->getVagrantFile($vagrantConfig['hostId']);
             if(file_put_contents($vagrantFile,$vagrantFileString)){
+                $this->saveVagrantConfig($vagrantConfig['hostId'],$vagrantConfig);
                 return $vagrantConfig['hostId'];
             }else{
                 return -2;
@@ -79,7 +80,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         if(empty($hostId)){
             return false;
         }
-        if( is_file($this->getVagrantDir($hostId)."Vagrantfile") ) {
+        if( is_file($this->getVagrantFile($hostId)) ) {
             return true;
         }else{
             return false;
@@ -91,16 +92,34 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         return VAGRANT_ROOT.$hostId.DIRECTORY_SEPARATOR;
     }
 
+    //获取vagrant主机目录
+    function getVagrantFile( $hostId ){
+        return $this->getVagrantDir($hostId)."Vagrantfile";
+    }
+
+    //获取vagrant配置目录
+    function getVagrantConfigFile($hostId){
+        return $this->getVagrantDir($hostId)."VmConfig";
+    }
+    function getVagrantConfig($hostId){
+        $str = file_get_contents($this->getVagrantConfigFile($hostId));
+        return json_decode($str,true);
+    }
+
+    function saveVagrantConfig($hostId,$vagrantConfig){
+        file_put_contents($this->getVagrantConfigFile($hostId),json_encode($vagrantConfig));
+    }
+
     function runCmd($cmd,$ret = false){
-        echo $cmd;
-        return [];
-//        if($ret){
-//            $exeRes = [];
-//            exec($cmd,$exeRes);
-//            return $exeRes;
-//        }else{
-//            exec($cmd);
-//            return [];
-//        }
+//        echo $cmd;
+//        return [];
+        if($ret){
+            $exeRes = [];
+            exec($cmd,$exeRes);
+            return $exeRes;
+        }else{
+            exec($cmd);
+            return [];
+        }
     }
 }

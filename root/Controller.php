@@ -46,5 +46,9 @@ class Controller extends Lit\LitMs\LitMsController {
             return Model("VmApi")->vmDestroy($request);
         });
 
+        //网卡列表
+        $this->get('/api/netCardList',function (){
+            return Model("VmApi")->netCardList();
+        });
     }
 }
