@@ -1,4 +1,7 @@
 <?php
+
+date_default_timezone_set("PRC");
+
 //服务监听IP 默认值 127.0.0.1
 define("LITMS_HTTP_HOST","0.0.0.0");
 //服务监听端口 默认值 8080
@@ -13,7 +16,7 @@ define("SWOOLE_SERVER_SET",array(
 ));
 
 //自定义常量
-define("VAGRANT_ROOT","/home/ghost/vagrant/");  //vagrant 文件保存目录
+define("VAGRANT_ROOT","/home/ghost/vagrant/auto/");  //vagrant 文件保存目录
 
 define("VAGRANT_DATA_DIR",__DIR__.DIRECTORY_SEPARATOR."Data".DIRECTORY_SEPARATOR); //临时文件保存目录
 

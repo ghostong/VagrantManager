@@ -17,24 +17,28 @@
         $(document).ready(function(){
             //主机列表
             $.ajax({
-                type:'get',
-                url:"/vagrant/vmList",
-                cache: false,
-                dataType:'json',
+                type:'get', url:"/api/vmList", cache: false, dataType:'json',
                 success:function(sjson){
                     if(sjson.success == 1){
                         for( i = 0; i< sjson.response.length ; i ++ ){
-                            $("#vmListTable").append("<tr>" +
+                            hostId = sjson.response[i].hostId;
+                            $("#vmListTable").append("<tr id='vmInfo:"+hostId+"'>" +
                                 "<td>"+sjson.response[i].hostId+"</td>" +
                                 "<td>CPU</td>" +
                                 "<td>内存</td>" +
                                 "<td>磁盘</td>" +
                                 "<td>IP</td>" +
-                                "<td>状态</td>" +
+                                "<td>-</td>" +
                                 "<td>"+sjson.response[i].cTime+"</td>" +
-                                "<td>操作</td>" +
+                                "<td>" +
+                                    "<button hostId=\""+hostId+"\" type=\"button\" class=\"vmActionUp btn btn-success btn-sm\">开机</button> " +
+                                    "<button hostId=\""+hostId+"\" type=\"button\" class=\"vmActionReload btn btn-info btn-sm\">重启</button> " +
+                                    "<button hostId=\""+hostId+"\" type=\"button\" class=\"vmActionOff btn btn-warning btn-sm\">关机</button> " +
+                                    "<button hostId=\""+hostId+"\" type=\"button\" class=\"vmActionDestroy btn btn-danger btn-sm\">释放</button>" +
+                                "</td>" +
                                 "</tr>");
                         }
+                        a();
                     }
                 },
                 error:function(){
@@ -42,7 +46,73 @@
                 }
             });
 
-        })
+
+
+        });
+
+        function a () {
+            $(".vmActionUp").click(function(){
+                $.ajax({
+                    type:'post',
+                    url:'/api/vmUp',
+                    cache: false,
+                    data:"hostId="+$(this).attr("hostId"),
+                    dataType:'json',
+                    success:function(djson){
+                        alert('开机操作,主机ID: '+djson.response.hostId);
+                    },
+                    error:function(){
+                        alert("开机失败")
+                    }
+                })
+            });
+            $(".vmActionReload").click(function(){
+                $.ajax({
+                    type:'post',
+                    url:'/api/vmReload',
+                    cache: false,
+                    data:"hostId="+$(this).attr("hostId"),
+                    dataType:'json',
+                    success:function(djson){
+                        alert('重启操作,主机ID: '+djson.response.hostId);
+                    },
+                    error:function(){
+                        alert("重启失败")
+                    }
+                })
+            });
+            $(".vmActionOff").click(function(){
+                $.ajax({
+                    type:'post',
+                    url:'/api/vmOff',
+                    cache: false,
+                    data:"hostId="+$(this).attr("hostId"),
+                    dataType:'json',
+                    success:function(djson){
+                        alert('关机操作,主机ID: '+djson.response.hostId);
+                    },
+                    error:function(){
+                        alert("关机失败")
+                    }
+                })
+            });
+            $(".vmActionDestroy").click(function(){
+                $.ajax({
+                    type:'post',
+                    url:'/api/vmDestroy',
+                    cache: false,
+                    data:"hostId="+$(this).attr("hostId"),
+                    dataType:'json',
+                    success:function(djson){
+                        alert('释放操作,主机ID: '+djson.response.hostId);
+                    },
+                    error:function(){
+                        alert("释放失败")
+                    }
+                })
+            });
+
+        }
     </script>
 </head>
 <body>
@@ -54,7 +124,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/add">创建虚拟机</a></li>
+                <li><a href="/vm/add">创建虚拟机</a></li>
             </ul>
         </div>
     </div>

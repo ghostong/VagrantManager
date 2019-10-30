@@ -18,7 +18,7 @@
             //操作系统列表
             $.ajax({
                 type:'get',
-                url:"/vagrant/boxList",
+                url:"/api/opSystemList",
                 cache: false,
                 dataType:'json',
                 success:function(sjson){
@@ -64,7 +64,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/add">创建虚拟机</a></li>
+                <li><a href="/vm/add">创建虚拟机</a></li>
                 <li><a href="/">回首页</a></li>
             </ul>
         </div>
@@ -72,7 +72,7 @@
 </nav>
 
 <div class="container-fluid margin-top">
-    <form class="form-horizontal" id="vmForm" action="/vagrant/submitAdd">
+    <form class="form-horizontal" id="vmForm" action="/api/submitAdd">
         <div class="form-group">
             <label class="col-sm-2 control-label">操作系统</label>
             <div class="col-sm-2">
