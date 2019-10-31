@@ -114,9 +114,6 @@
                         tmp.find("[name=cpu]").text(djson.response.cpuNum + "vCpu");
                         tmp.find("[name=memory]").text(djson.response.memNum + "M");
                         tmp.find("[name=ip]").text(djson.response.ipAddress);
-                    },
-                    error:function(){
-                        alert("获取 hostId:"+hostId+"失败");
                     }
                 })
             });
@@ -132,9 +129,6 @@
                     type:'get', url:'/api/getVmStatus', cache: false, data:"hostId="+hostId, dataType:'json',
                     success:function(djson){
                         tmp.find("[name=status]").text(djson.response.status );
-                    },
-                    error:function(){
-                        alert("获取 hostId:"+hostId+"失败");
                     }
                 })
             });
