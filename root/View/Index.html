@@ -24,6 +24,7 @@
                         for( i = 0; i< sjson.response.length ; i ++ ){
                             hostId = sjson.response[i].hostId;
                             $("#vmListTable").append("<tr class='vmList' id='vmInfo:"+hostId+"'>" +
+                                "<td>"+(++i)+"</td>" +
                                 "<td name='hostId'>"+sjson.response[i].hostId+"</td> <td name='nickname'>-</td>" +
                                 "<td name='cpu'>-</td> <td name='memory'>-</td> <td name='ip'>IP</td> <td name='status'>-</td>" +
                                 "<td>"+sjson.response[i].cTime+"</td>" +
@@ -157,9 +158,9 @@
     <!-- Table -->
     <table class="table" id="vmListTable">
         <tr>
-            <th class="col-sm-1">主机ID</th> <td class="col-sm-2">昵称</td> <th class="col-sm-1">CPU</th>
-            <th class="col-sm-1">内存</th> <th class="col-sm-1">IP</th> <th class="col-sm-1">状态</th>
-            <th class="col-sm-2">创建时间</th> <th class="col-sm-2">操作</th>
+            <th class="col-sm-1">序列</th> <th class="col-sm-1">主机ID</th> <td class="col-sm-2">昵称</td>
+            <th class="col-sm-1">CPU</th> <th class="col-sm-1">内存</th> <th class="col-sm-1">IP</th>
+            <th class="col-sm-1">状态</th> <th class="col-sm-2">创建时间</th> <th class="col-sm-2">操作</th>
         </tr>
     </table>
 </div>
