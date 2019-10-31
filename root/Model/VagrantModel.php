@@ -44,7 +44,10 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant up ";
         $this->runCmd($cmd);
-        $this->vagrantGetIp($hostId);
+        $ipList = $this->vagrantGetIp($hostId);
+        if(!empty($ipList)){
+            Model("Config")->updateConfig($hostId,['ipAddress'=>implode(",",$ipList)]);
+        }
     }
 
     //vagrant status
@@ -92,14 +95,17 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant provision";
         $execRet = $this->runCmd($cmd,true);
-        var_dump ($execRet);
+        $ret = [];
         foreach ($execRet as $value) {
             $exp = explode(":",$value);
             $tmp = trim(end($exp));
-            var_dump($tmp);
-            preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/",$tmp,$ip);
-            var_dump ($ip);
+            preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/",$tmp,$matches);
+            if(!empty($matches)){
+                $ip = current($matches);
+                $ret[] = $ip;
+            }
         }
+        return $ret;
     }
 
     //是否有效虚拟机
