@@ -50,5 +50,15 @@ class Controller extends Lit\LitMs\LitMsController {
         $this->get('/api/netCardList',function (){
             return Model("VmApi")->netCardList();
         });
+
+        //服务器配置
+        $this->get('/api/getVmConfig',function ($request){
+            return Model("VmApi")->getVmConfig($request);
+        });
+
+        //服务器运行状态
+        $this->get('/api/getVmStatus',function ($request){
+            return Model("VmApi")->getVmStatus($request);
+        });
     }
 }

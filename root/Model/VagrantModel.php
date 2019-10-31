@@ -28,7 +28,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         if(mkdir($vagrantDir)){
             $vagrantFile = $this->getVagrantFile($vagrantConfig['hostId']);
             if(file_put_contents($vagrantFile,$vagrantFileString)){
-                $this->saveVagrantConfig($vagrantConfig['hostId'],$vagrantConfig);
+                Model("Config")->saveConfig($vagrantConfig['hostId'],$vagrantConfig);
                 return $vagrantConfig['hostId'];
             }else{
                 return -2;
@@ -50,8 +50,14 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant status";
         $execRet = $this->runCmd($cmd,true);
-        var_dump ($execRet);
-
+        $tmpStr = implode('|',$execRet);
+        $status = ["not created","poweroff","running","saved"];
+        foreach($status as $val) {
+           if ( strpos($tmpStr,$val) !== false ) {
+               return $val;
+           }
+        }
+        return "none";
     }
 
     //vagrant reload
@@ -97,28 +103,14 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         return $this->getVagrantDir($hostId)."Vagrantfile";
     }
 
-    //获取vagrant配置目录
-    function getVagrantConfigFile($hostId){
-        return $this->getVagrantDir($hostId)."VmConfig";
-    }
-    function getVagrantConfig($hostId){
-        $str = file_get_contents($this->getVagrantConfigFile($hostId));
-        return json_decode($str,true);
-    }
-
-    function saveVagrantConfig($hostId,$vagrantConfig){
-        file_put_contents($this->getVagrantConfigFile($hostId),json_encode($vagrantConfig));
-    }
-
     function runCmd($cmd,$ret = false){
-//        echo $cmd;
-//        return [];
         if($ret){
             $exeRes = [];
+            echo $cmd;
             exec($cmd,$exeRes);
             return $exeRes;
         }else{
-            exec($cmd);
+//            exec($cmd);
             return [];
         }
     }

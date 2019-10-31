@@ -39,8 +39,8 @@
                 success:function(sjson){
                     if(sjson.success == 1){
                         for( i = 0; i< sjson.response.length ; i ++ ){
-                            cardName = sjson.response[i];
-                            $("#netCardList").append("<option value=\""+cardName+"\">"+cardName+"</option>");
+                            info = sjson.response[i];
+                            $("#netCardList").append("<option value=\""+info['name']+"\">"+info['name']+"["+info['ip']+"]</option>");
                         }
                     }else{
                         alert("获取操作系统列表失败(api)")
@@ -56,11 +56,7 @@
                 var targetUrl = $("#vmForm").attr("action");
                 var data = $("#vmForm").serialize();
                 $.ajax({
-                    type:'post',
-                    url:targetUrl,
-                    cache: false,
-                    data:data,
-                    dataType:'json',
+                    type:'post', url:targetUrl, cache: false, data:data, dataType:'json',
                     success:function(data){
                         alert('创建成功,主机ID: '+data.response.hostId);
                         $(window).attr('location','/');
@@ -145,7 +141,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">桥接网卡</label>
             <div class="col-sm-2">
-                <select id="netCardList" class="form-control" name="netCard">
+                <select id="netCardList" class="form-control" name="bridgeNetCard">
 
                 </select>
             </div>

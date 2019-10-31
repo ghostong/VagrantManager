@@ -1,10 +1,10 @@
 <?php
 
 class SystemModel extends \Lit\LitMs\LitMsModel {
-    function getNetCardName(){
+    function getNetCard(){
         $ret = [];
-        foreach( swoole_get_local_mac() as $key => $val) {
-            $ret[] = $key;
+        foreach( swoole_get_local_ip() as $key => $val) {
+            $ret[] = ["name"=>$key,"ip"=>$val];
         }
         return $ret;
     }

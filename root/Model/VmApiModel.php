@@ -12,7 +12,7 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
         $vagrantConfig['cpuNum'] = $request->post["cpuNum"];
         $vagrantConfig['memNum'] = $request->post["memNum"];
         $vagrantConfig['opSystem'] = $request->post["opSystem"];
-        $vagrantConfig['netCard'] = $request->post["netCard"];
+        $vagrantConfig['bridgeNetCard'] = $request->post["bridgeNetCard"];
 
         $hostId = Model("Vagrant")->vagrantInit($vagrantConfig);
         if( $hostId == -1 ){
@@ -81,14 +81,35 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
         return Success($vmList);
     }
 
+    //获取机器配置
+    function getVmConfig ($request){
+        $hostId = $request->get["hostId"];
+        if(!Model("Config")->configIsEff($hostId)){
+            return Error(0,"hostId: ".$hostId." 不是有效的虚拟机");
+        }else{
+            $config = Model("Config")->getConfig($hostId);
+            return Success($config);
+        }
+    }
+
     //网卡列表
     function netCardList () {
-        $cardList = Model("System")->getNetCardName();
+        $cardList = Model("System")->getNetCard();
         if(empty($cardList)){
             return Error(0,[]);
         }else{
             return Success ($cardList);
         }
+    }
+
+    //获取虚拟机运行状态
+    function getVmStatus($request){
+        $hostId = $request->get["hostId"];
+        if(!Model("Vagrant")->vagrantIsEff($hostId)){
+            return Error(0,"hostId: ".$hostId." 不是有效的虚拟机");
+        }
+        $status = Model("Vagrant")->vagrantStatus($hostId);
+        return Success(["hostId"=>$hostId,"status"=>$status]);
     }
 
 }

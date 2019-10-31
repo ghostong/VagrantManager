@@ -22,13 +22,9 @@
                     if(sjson.success == 1){
                         for( i = 0; i< sjson.response.length ; i ++ ){
                             hostId = sjson.response[i].hostId;
-                            $("#vmListTable").append("<tr id='vmInfo:"+hostId+"'>" +
-                                "<td>"+sjson.response[i].hostId+"</td>" +
-                                "<td>CPU</td>" +
-                                "<td>内存</td>" +
-                                "<td>磁盘</td>" +
-                                "<td>IP</td>" +
-                                "<td>-</td>" +
+                            $("#vmListTable").append("<tr class='vmList' id='vmInfo:"+hostId+"'>" +
+                                "<td name='hostId'>"+sjson.response[i].hostId+"</td> <td name='nickname'>昵称</td>" +
+                                "<td name='cpu'>-</td> <td name='memory'>-</td> <td name='ip'>IP</td> <td name='status'>-</td>" +
                                 "<td>"+sjson.response[i].cTime+"</td>" +
                                 "<td>" +
                                     "<button hostId=\""+hostId+"\" type=\"button\" class=\"vmActionUp btn btn-success btn-sm\">开机</button> " +
@@ -38,26 +34,20 @@
                                 "</td>" +
                                 "</tr>");
                         }
-                        a();
+                        onVmList();
                     }
                 },
                 error:function(){
                     alert("主机列表请求失败")
                 }
             });
-
-
-
         });
 
-        function a () {
+        function onVmList () {
+            //开机
             $(".vmActionUp").click(function(){
                 $.ajax({
-                    type:'post',
-                    url:'/api/vmUp',
-                    cache: false,
-                    data:"hostId="+$(this).attr("hostId"),
-                    dataType:'json',
+                    type:'post', url:'/api/vmUp', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
                         alert('开机操作,主机ID: '+djson.response.hostId);
                     },
@@ -66,13 +56,10 @@
                     }
                 })
             });
+            //重启
             $(".vmActionReload").click(function(){
                 $.ajax({
-                    type:'post',
-                    url:'/api/vmReload',
-                    cache: false,
-                    data:"hostId="+$(this).attr("hostId"),
-                    dataType:'json',
+                    type:'post', url:'/api/vmReload', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
                         alert('重启操作,主机ID: '+djson.response.hostId);
                     },
@@ -81,13 +68,10 @@
                     }
                 })
             });
+            //关机
             $(".vmActionOff").click(function(){
                 $.ajax({
-                    type:'post',
-                    url:'/api/vmOff',
-                    cache: false,
-                    data:"hostId="+$(this).attr("hostId"),
-                    dataType:'json',
+                    type:'post', url:'/api/vmOff', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
                         alert('关机操作,主机ID: '+djson.response.hostId);
                     },
@@ -96,13 +80,10 @@
                     }
                 })
             });
+            //删除
             $(".vmActionDestroy").click(function(){
                 $.ajax({
-                    type:'post',
-                    url:'/api/vmDestroy',
-                    cache: false,
-                    data:"hostId="+$(this).attr("hostId"),
-                    dataType:'json',
+                    type:'post', url:'/api/vmDestroy', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
                         alert('释放操作,主机ID: '+djson.response.hostId);
                     },
@@ -111,6 +92,41 @@
                     }
                 })
             });
+
+            //获取主机配置
+            $(".vmList").each(function(){
+                var tmp = $(this);
+                hostId = tmp.find("[name=hostId]").text();
+                $.ajax({
+                    type:'get', url:'/api/getVmConfig', cache: false, data:"hostId="+hostId, dataType:'json',
+                    success:function(djson){
+                        tmp.find("[name=cpu]").text(djson.response.cpuNum + "vCpu");
+                        tmp.find("[name=memory]").text(djson.response.memNum + "M");
+                        tmp.find("[name=ip]").text(djson.response.ipAddress);
+                    },
+                    error:function(){
+                        alert("获取 hostId:"+hostId+"失败");
+                    }
+                })
+            });
+
+            function getVmStatus(){
+                //获取主机状态
+                $(".vmList").each(function(){
+                    var tmp = $(this);
+                    hostId = tmp.find("[name=hostId]").text();
+                    $.ajax({
+                        type:'get', url:'/api/getVmStatus', cache: false, data:"hostId="+hostId, dataType:'json',
+                        success:function(djson){
+                            tmp.find("[name=status]").text(djson.response.status );
+                        },
+                        error:function(){
+                            alert("获取 hostId:"+hostId+"失败");
+                        }
+                    })
+                });
+            }
+            setTimeout ( getVmStatus(), 30000 );
 
         }
     </script>
@@ -133,10 +149,9 @@
 <div class="panel panel-default margin-top">
     <!-- Default panel contents -->
     <div class="panel-heading">主机列表</div>
-
     <!-- Table -->
     <table class="table" id="vmListTable">
-        <tr><th>主机ID</th> <th>CPU</th> <th>内存</th> <th>磁盘</th> <th>IP</th> <th>状态</th> <th>创建时间</th> <th>操作</th> </tr>
+        <tr> <th>主机ID</th> <td>昵称</td> <th>CPU</th> <th>内存</th> <th>IP</th> <th>状态</th> <th>创建时间</th> <th>操作</th> </tr>
     </table>
 </div>
 
