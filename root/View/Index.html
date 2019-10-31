@@ -2,6 +2,7 @@
 
 <head>
     <meta http-equiv=Content-Type content="text/html;charset=utf-8" />
+    <title>虚拟机管理</title>
     <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -23,7 +24,7 @@
                         for( i = 0; i< sjson.response.length ; i ++ ){
                             hostId = sjson.response[i].hostId;
                             $("#vmListTable").append("<tr class='vmList' id='vmInfo:"+hostId+"'>" +
-                                "<td name='hostId'>"+sjson.response[i].hostId+"</td> <td name='nickname'>昵称</td>" +
+                                "<td name='hostId'>"+sjson.response[i].hostId+"</td> <td name='nickname'>-</td>" +
                                 "<td name='cpu'>-</td> <td name='memory'>-</td> <td name='ip'>IP</td> <td name='status'>-</td>" +
                                 "<td>"+sjson.response[i].cTime+"</td>" +
                                 "<td>" +
@@ -58,6 +59,9 @@
             });
             //重启
             $(".vmActionReload").click(function(){
+                if(!confirm("是否要重启?")){
+                    return false;
+                }
                 $.ajax({
                     type:'post', url:'/api/vmReload', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
@@ -70,6 +74,9 @@
             });
             //关机
             $(".vmActionOff").click(function(){
+                if(!confirm("是否要关机?")){
+                    return false;
+                }
                 $.ajax({
                     type:'post', url:'/api/vmOff', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
@@ -82,10 +89,17 @@
             });
             //删除
             $(".vmActionDestroy").click(function(){
+                if(!confirm("是否要删除虚拟机?此操作不可恢复!!")){
+                    return false;
+                }
+                if(!confirm("确认此操作不可恢复!!")){
+                    return false;
+                }
                 $.ajax({
                     type:'post', url:'/api/vmDestroy', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
                         alert('释放操作,主机ID: '+djson.response.hostId);
+                        window.location.reload();
                     },
                     error:function(){
                         alert("释放失败")
@@ -100,6 +114,7 @@
                 $.ajax({
                     type:'get', url:'/api/getVmConfig', cache: false, data:"hostId="+hostId, dataType:'json',
                     success:function(djson){
+                        tmp.find("[name=nickname]").text(djson.response.nickName);
                         tmp.find("[name=cpu]").text(djson.response.cpuNum + "vCpu");
                         tmp.find("[name=memory]").text(djson.response.memNum + "M");
                         tmp.find("[name=ip]").text(djson.response.ipAddress);
@@ -141,6 +156,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/vm/add">创建虚拟机</a></li>
+                <li><a href="/vm/help">帮助</a></li>
             </ul>
         </div>
     </div>

@@ -13,6 +13,7 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
         $vagrantConfig['memNum'] = $request->post["memNum"];
         $vagrantConfig['opSystem'] = $request->post["opSystem"];
         $vagrantConfig['bridgeNetCard'] = $request->post["bridgeNetCard"];
+        $vagrantConfig['nickName'] = $request->post["nickName"];
 
         $hostId = Model("Vagrant")->vagrantInit($vagrantConfig);
         if( $hostId == -1 ){

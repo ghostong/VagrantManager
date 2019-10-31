@@ -53,7 +53,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $tmpStr = implode('|',$execRet);
         $status = ["not created","poweroff","running","saved"];
         foreach($status as $val) {
-           if ( strpos($tmpStr,$val) !== false ) {
+           if ( strpos($tmpStr,$val." (") !== false ) {
                return $val;
            }
         }
@@ -110,7 +110,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
             exec($cmd,$exeRes);
             return $exeRes;
         }else{
-//            exec($cmd);
+            exec($cmd);
             return [];
         }
     }
