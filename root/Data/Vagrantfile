@@ -11,6 +11,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
+    echo root:123@456 | chpasswd
+    sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
     ifconfig |grep 'inet addr:' |grep -v '127.0.0.1' | awk -F '[: ]' '{print $13}'
   SHELL
 
