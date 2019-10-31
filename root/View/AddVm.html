@@ -54,6 +54,7 @@
 
             //提交保存
             $("#submitAddVm").click(function(){
+                $(this).attr("disabled","disabled");
                 var targetUrl = $("#vmForm").attr("action");
                 var data = $("#vmForm").serialize();
                 $.ajax({
@@ -151,7 +152,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">名称</label>
             <div class="col-sm-2">
-                <input type="text" class="form-control" name="nickName" placeholder="主机昵称">
+                <input type="text" class="form-control" name="nickName" placeholder="主机昵称(10个文字)" maxlength="10" />
             </div>
         </div>
 

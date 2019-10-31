@@ -17,8 +17,9 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
 
     //vagrant init
     function vagrantInit($vagrantConfig){
-        $vagrantConfig['hostId'] = isset($vagrantConfig['hostId'])?$vagrantConfig['hostId']:uniqid();
-        $vagrantConfig['hostName'] = isset($vagrantConfig['hostName'])?$vagrantConfig['hostName']:$vagrantConfig['hostId'] ;
+        $vagrantConfig['hostId'] = isset($vagrantConfig['hostId']) ? $vagrantConfig['hostId'] : uniqid();
+        $vagrantConfig['hostName'] = isset($vagrantConfig['hostName']) ? $vagrantConfig['hostName'] : $vagrantConfig['hostId'];
+        $vagrantConfig['nickName'] = (isset($vagrantConfig['nickName']) && !empty($vagrantConfig['nickName'])) ? $vagrantConfig['nickName'] : $vagrantConfig['hostId'];
         $string = file_get_contents(VAGRANT_DATA_DIR."Vagrantfile");
         $vagrantFileString = \Lit\Litool\LiString::ReplaceStringVariable($string,$vagrantConfig);
         $vagrantDir = $this->getVagrantDir($vagrantConfig['hostId']);
@@ -41,7 +42,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant up
     function vagrantUp( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant up & echo 1";
+        $cmd = "cd {$hostDir} && vagrant up ";
         $this->runCmd($cmd);
     }
 
@@ -63,21 +64,21 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant reload
     function vagrantReload( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant reload & echo 1";
+        $cmd = "cd {$hostDir} && vagrant reload ";
         $this->runCmd($cmd);
     }
 
     //vagrant halt
     function vagrantHalt( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant halt & echo 1";
+        $cmd = "cd {$hostDir} && vagrant halt ";
         $this->runCmd($cmd);
     }
 
     //vagrant destroy
     function vagrantDestroy( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant destroy -f & echo 1";
+        $cmd = "cd {$hostDir} && vagrant destroy -f ";
         $this->runCmd($cmd);
         if (PHP_OS === 'Windows') {
             exec(sprintf("rd /s /q %s", escapeshellarg($hostDir)));

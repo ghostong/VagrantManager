@@ -36,6 +36,7 @@
                                 "</tr>");
                         }
                         onVmList();
+                        getVmStatus();
                     }
                 },
                 error:function(){
@@ -47,58 +48,51 @@
         function onVmList () {
             //开机
             $(".vmActionUp").click(function(){
+                tmp = $(this);
+                tmp.attr("disabled","disabled");
                 $.ajax({
                     type:'post', url:'/api/vmUp', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
-                        alert('开机操作,主机ID: '+djson.response.hostId);
-                    },
-                    error:function(){
-                        alert("开机失败")
+                        tmp.removeAttr("disabled","disabled");
                     }
                 })
+
+
             });
             //重启
             $(".vmActionReload").click(function(){
-                if(!confirm("是否要重启?")){
-                    return false;
-                }
+                if(!confirm("是否要重启?")){return false;}
+                tmp = $(this);
+                tmp.attr("disabled","disabled");
                 $.ajax({
                     type:'post', url:'/api/vmReload', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
-                        alert('重启操作,主机ID: '+djson.response.hostId);
-                    },
-                    error:function(){
-                        alert("重启失败")
+                        tmp.removeAttr("disabled","disabled");
                     }
                 })
             });
             //关机
             $(".vmActionOff").click(function(){
-                if(!confirm("是否要关机?")){
-                    return false;
-                }
+                if(!confirm("是否要关机?")){ return false; }
+                tmp = $(this);
+                tmp.attr("disabled","disabled");
                 $.ajax({
                     type:'post', url:'/api/vmOff', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
-                        alert('关机操作,主机ID: '+djson.response.hostId);
-                    },
-                    error:function(){
-                        alert("关机失败")
+                        tmp.removeAttr("disabled","disabled");
                     }
                 })
             });
             //删除
             $(".vmActionDestroy").click(function(){
-                if(!confirm("是否要删除虚拟机?此操作不可恢复!!")){
-                    return false;
-                }
-                if(!confirm("确认此操作不可恢复!!")){
-                    return false;
-                }
+                if(!confirm("是否要删除虚拟机?此操作不可恢复!!")){ return false; }
+                if(!confirm("确认此操作不可恢复!!")){ return false; }
+                tmp = $(this);
+                tmp.attr("disabled","disabled");
                 $.ajax({
                     type:'post', url:'/api/vmDestroy', cache: false, data:"hostId="+$(this).attr("hostId"), dataType:'json',
                     success:function(djson){
-                        alert('释放操作,主机ID: '+djson.response.hostId);
+                        tmp.removeAttr("disabled","disabled");
                         window.location.reload();
                     },
                     error:function(){
@@ -124,25 +118,24 @@
                     }
                 })
             });
+            setInterval(getVmStatus, 30000 );
+        }
 
-            function getVmStatus(){
-                //获取主机状态
-                $(".vmList").each(function(){
-                    var tmp = $(this);
-                    hostId = tmp.find("[name=hostId]").text();
-                    $.ajax({
-                        type:'get', url:'/api/getVmStatus', cache: false, data:"hostId="+hostId, dataType:'json',
-                        success:function(djson){
-                            tmp.find("[name=status]").text(djson.response.status );
-                        },
-                        error:function(){
-                            alert("获取 hostId:"+hostId+"失败");
-                        }
-                    })
-                });
-            }
-            setTimeout ( getVmStatus(), 30000 );
-
+        function getVmStatus(){
+            //获取主机状态
+            $(".vmList").each(function(){
+                var tmp = $(this);
+                hostId = tmp.find("[name=hostId]").text();
+                $.ajax({
+                    type:'get', url:'/api/getVmStatus', cache: false, data:"hostId="+hostId, dataType:'json',
+                    success:function(djson){
+                        tmp.find("[name=status]").text(djson.response.status );
+                    },
+                    error:function(){
+                        alert("获取 hostId:"+hostId+"失败");
+                    }
+                })
+            });
         }
     </script>
 </head>
@@ -167,7 +160,11 @@
     <div class="panel-heading">主机列表</div>
     <!-- Table -->
     <table class="table" id="vmListTable">
-        <tr> <th>主机ID</th> <td>昵称</td> <th>CPU</th> <th>内存</th> <th>IP</th> <th>状态</th> <th>创建时间</th> <th>操作</th> </tr>
+        <tr>
+            <th class="col-sm-1">主机ID</th> <td class="col-sm-2">昵称</td> <th class="col-sm-1">CPU</th>
+            <th class="col-sm-1">内存</th> <th class="col-sm-1">IP</th> <th class="col-sm-1">状态</th>
+            <th class="col-sm-2">创建时间</th> <th class="col-sm-2">操作</th>
+        </tr>
     </table>
 </div>
 
