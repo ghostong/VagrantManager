@@ -94,7 +94,9 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $execRet = $this->runCmd($cmd,true);
         var_dump ($execRet);
         foreach ($execRet as $value) {
-            $ip = preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/",$value);
+            $exp = explode(":",$value);
+            $tmp = end($exp);
+            $ip = preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/",$tmp);
             var_dump ($ip);
         }
     }
