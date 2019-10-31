@@ -63,21 +63,21 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant reload
     function vagrantReload( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant reload &";
+        $cmd = "cd {$hostDir} && vagrant reload & echo 1";
         $this->runCmd($cmd);
     }
 
     //vagrant halt
     function vagrantHalt( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant halt &";
+        $cmd = "cd {$hostDir} && vagrant halt & echo 1";
         $this->runCmd($cmd);
     }
 
     //vagrant destroy
     function vagrantDestroy( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant destroy -f &";
+        $cmd = "cd {$hostDir} && vagrant destroy -f & echo 1";
         $this->runCmd($cmd);
         rmdir($hostDir);
     }
