@@ -41,7 +41,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant up
     function vagrantUp( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant up &";
+        $cmd = "cd {$hostDir} && vagrant up & echo 1";
         $this->runCmd($cmd);
     }
 
@@ -79,7 +79,11 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant destroy -f & echo 1";
         $this->runCmd($cmd);
-        rmdir($hostDir);
+        if (PHP_OS === 'Windows') {
+            exec(sprintf("rd /s /q %s", escapeshellarg($hostDir)));
+        } else {
+            exec(sprintf("rm -rf %s", escapeshellarg($hostDir)));
+        }
     }
 
     //是否有效虚拟机
