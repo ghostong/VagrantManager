@@ -77,8 +77,9 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant destroy
     function vagrantDestroy( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant destroy -f && rm -rf  {$hostDir} &";
+        $cmd = "cd {$hostDir} && vagrant destroy -f &";
         $this->runCmd($cmd);
+        rmdir($hostDir);
     }
 
     //是否有效虚拟机
@@ -104,9 +105,9 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     }
 
     function runCmd($cmd,$ret = false){
+        echo $cmd,"\n";
         if($ret){
             $exeRes = [];
-            echo $cmd;
             exec($cmd,$exeRes);
             return $exeRes;
         }else{
