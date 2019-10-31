@@ -44,6 +44,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant up ";
         $this->runCmd($cmd);
+        $this->vagrantGetIp($hostId);
     }
 
     //vagrant status
@@ -84,6 +85,17 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
             exec(sprintf("rd /s /q %s", escapeshellarg($hostDir)));
         } else {
             exec(sprintf("rm -rf %s", escapeshellarg($hostDir)));
+        }
+    }
+    //vagrant provision
+    function vagrantGetIp ( $hostId ) {
+        $hostDir = $this->getVagrantDir( $hostId );
+        $cmd = "cd {$hostDir} && vagrant provision";
+        $execRet = $this->runCmd($cmd,true);
+        var_dump ($execRet);
+        foreach ($execRet as $value) {
+            $ip = preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/",$value);
+            var_dump ($ip);
         }
     }
 

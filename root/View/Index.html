@@ -43,6 +43,8 @@
                     alert("主机列表请求失败")
                 }
             });
+
+            $("#reloadPage").attr("href","/?_="+Math.random());
         });
 
         function onVmList () {
@@ -157,7 +159,7 @@
 
 <div class="panel panel-default margin-top">
     <!-- Default panel contents -->
-    <div class="panel-heading">主机列表</div>
+    <div class="panel-heading"><span>主机列表</span><span style="float:right"><a href="#" id="reloadPage">刷新</a></span></div>
     <!-- Table -->
     <table class="table" id="vmListTable">
         <tr>

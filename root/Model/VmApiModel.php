@@ -23,7 +23,6 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
         }elseif($hostId == -3){
             return Error(0,"创建 Vagrant 目录失败");
         }else{
-            Model("Vagrant")->vagrantUp($hostId);
             return Success(["hostId"=>$hostId]);
         }
     }
