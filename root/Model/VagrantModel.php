@@ -42,7 +42,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant up
     function vagrantUp( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant up &";
+        $cmd = "cd {$hostDir} && vagrant up & echo 1";
         $this->runCmd($cmd);
         $ipList = $this->vagrantGetIp($hostId);
         if(!empty($ipList)){
@@ -68,21 +68,21 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant reload
     function vagrantReload( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant reload &";
+        $cmd = "cd {$hostDir} && vagrant reload & echo 1";
         $this->runCmd($cmd);
     }
 
     //vagrant halt
     function vagrantHalt( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant halt &";
+        $cmd = "cd {$hostDir} && vagrant halt & echo 1";
         $this->runCmd($cmd);
     }
 
     //vagrant destroy
     function vagrantDestroy( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant destroy -f &";
+        $cmd = "cd {$hostDir} && vagrant destroy -f & echo 1";
         $this->runCmd($cmd);
         if (PHP_OS === 'Windows') {
             exec(sprintf("rd /s /q %s", escapeshellarg($hostDir)));
@@ -125,7 +125,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         return VAGRANT_ROOT.$hostId.DIRECTORY_SEPARATOR;
     }
 
-    //获取vagrant主机目录
+    //获取vagrantfile目录
     function getVagrantFile( $hostId ){
         return $this->getVagrantDir($hostId)."Vagrantfile";
     }
