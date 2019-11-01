@@ -137,7 +137,9 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
             exec($cmd,$exeRes);
             return $exeRes;
         }else{
-            exec($cmd);
+            go(function () use ($cmd) {
+                co::exec($cmd);
+            });
             return [];
         }
     }
