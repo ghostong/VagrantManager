@@ -42,7 +42,8 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
 
     //vagrant up
     function vagrantUp( $hostId ){
-        go(function () use ($hostId) {
+        $selfObj = $this;
+        go(function () use ($hostId,$selfObj) {
             $hostDir = $this->getVagrantDir( $hostId );
             $cmd = "cd {$hostDir} && vagrant up ";
             co::exec($cmd);
@@ -72,15 +73,17 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
 
     //vagrant reload
     function vagrantReload( $hostId ){
-        go(function () use ($hostId) {
-            $hostDir = $this->getVagrantDir( $hostId );
+        $selfObj = $this;
+        go(function () use ($hostId, $selfObj) {
+            $hostDir = $this->getVagrantDir($hostId);
             $cmd = "cd {$hostDir} && vagrant reload ";
             co::exec($cmd);
         });
-
+    }
     //vagrant halt
     function vagrantHalt( $hostId ){
-        go(function () use ($hostId) {
+        $selfObj = $this;
+        go(function () use ($hostId,$selfObj) {
             $hostDir = $this->getVagrantDir( $hostId );
             $cmd = "cd {$hostDir} && vagrant halt ";
             co::exec($cmd);
@@ -89,7 +92,8 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
 
     //vagrant destroy
     function vagrantDestroy( $hostId ){
-        go(function () use ($hostId) {
+        $selfObj = $this;
+        go(function () use ($hostId,$selfObj) {
             $hostDir = $this->getVagrantDir( $hostId );
             $cmd = "cd {$hostDir} && vagrant destroy -f ";
             co::exec($cmd);
