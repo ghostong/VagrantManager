@@ -31,6 +31,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
             $vagrantFile = $this->getVagrantFile($vagrantConfig['hostId']);
             if(file_put_contents($vagrantFile,$vagrantFileString)){
                 Model("Config")->saveConfig($vagrantConfig['hostId'],$vagrantConfig);
+                $this->vagrantUp($vagrantConfig['hostId']);
                 return $vagrantConfig['hostId'];
             }else{
                 return -2;
