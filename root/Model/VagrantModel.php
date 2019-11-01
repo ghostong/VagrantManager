@@ -6,7 +6,8 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     function vagrantBoxList(){
         $cmd = "vagrant box list";
         $boxList = [];
-        $execRet = $this->runCmd($cmd,true);
+//        $execRet = $this->runCmd($cmd,true);
+        exec($cmd,$execRet);
         foreach ($execRet as $str) {
             if(substr_count($str,"There are no installed boxes") == 0){
                 $boxList[] = current(explode(" ",$str));
@@ -41,20 +42,24 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
 
     //vagrant up
     function vagrantUp( $hostId ){
-        $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant up ";
-        $this->runCmd($cmd);
-        $ipList = $this->vagrantGetIp($hostId);
-        if(!empty($ipList)){
-            Model("Config")->updateConfig($hostId,['ipAddress'=>implode(",",$ipList)]);
-        }
+        go(function () use ($hostId) {
+            $hostDir = $this->getVagrantDir( $hostId );
+            $cmd = "cd {$hostDir} && vagrant up ";
+            co::exec($cmd);
+            $ipList = $this->vagrantGetIp($hostId);
+            if(!empty($ipList)){
+                Model("Config")->updateConfig($hostId,['ipAddress'=>implode(",",$ipList)]);
+            }
+        });
+//        $this->runCmd($cmd);
     }
 
     //vagrant status
     function vagrantStatus( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant status";
-        $execRet = $this->runCmd($cmd,true);
+//        $execRet = $this->runCmd($cmd,true);
+        exec($cmd,$execRet);
         $tmpStr = implode('|',$execRet);
         $status = ["not created","poweroff","running","saved"];
         foreach($status as $val) {
@@ -67,34 +72,41 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
 
     //vagrant reload
     function vagrantReload( $hostId ){
-        $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant reload ";
-        $this->runCmd($cmd);
-    }
+        go(function () use ($hostId) {
+            $hostDir = $this->getVagrantDir( $hostId );
+            $cmd = "cd {$hostDir} && vagrant reload ";
+            co::exec($cmd);
+        });
 
     //vagrant halt
     function vagrantHalt( $hostId ){
-        $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant halt ";
-        $this->runCmd($cmd);
+        go(function () use ($hostId) {
+            $hostDir = $this->getVagrantDir( $hostId );
+            $cmd = "cd {$hostDir} && vagrant halt ";
+            co::exec($cmd);
+        });
     }
 
     //vagrant destroy
     function vagrantDestroy( $hostId ){
-        $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant destroy -f ";
-        $this->runCmd($cmd,true);
-        if (PHP_OS === 'Windows') {
-            exec(sprintf("rd /s /q %s", escapeshellarg($hostDir)));
-        } else {
-            exec(sprintf("rm -rf %s", escapeshellarg($hostDir)));
-        }
+        go(function () use ($hostId) {
+            $hostDir = $this->getVagrantDir( $hostId );
+            $cmd = "cd {$hostDir} && vagrant destroy -f ";
+            co::exec($cmd);
+            if (PHP_OS === 'Windows') {
+                exec(sprintf("rd /s /q %s", escapeshellarg($hostDir)));
+            } else {
+                exec(sprintf("rm -rf %s", escapeshellarg($hostDir)));
+            }
+        });
     }
+
     //vagrant provision
     function vagrantGetIp ( $hostId ) {
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant provision";
-        $execRet = $this->runCmd($cmd,true);
+//        $execRet = $this->runCmd($cmd,true);
+        exec($cmd,$execRet);
         $ret = [];
         foreach ($execRet as $value) {
             $exp = explode(":",$value);
@@ -130,17 +142,4 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         return $this->getVagrantDir($hostId)."Vagrantfile";
     }
 
-    function runCmd($cmd,$ret = false){
-        echo $cmd,"\n";
-        if($ret){
-            $exeRes = [];
-            exec($cmd,$exeRes);
-            return $exeRes;
-        }else{
-            go(function () use ($cmd) {
-                co::exec($cmd);
-            });
-            return [];
-        }
-    }
 }
