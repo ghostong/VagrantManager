@@ -42,7 +42,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant up
     function vagrantUp( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant up & echo 1";
+        $cmd = "cd {$hostDir} && vagrant up ";
         $this->runCmd($cmd);
         $ipList = $this->vagrantGetIp($hostId);
         if(!empty($ipList)){
@@ -68,22 +68,22 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     //vagrant reload
     function vagrantReload( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant reload & echo 1";
+        $cmd = "cd {$hostDir} && vagrant reload ";
         $this->runCmd($cmd);
     }
 
     //vagrant halt
     function vagrantHalt( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant halt & echo 1";
+        $cmd = "cd {$hostDir} && vagrant halt ";
         $this->runCmd($cmd);
     }
 
     //vagrant destroy
     function vagrantDestroy( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
-        $cmd = "cd {$hostDir} && vagrant destroy -f & echo 1";
-        $this->runCmd($cmd);
+        $cmd = "cd {$hostDir} && vagrant destroy -f ";
+        $this->runCmd($cmd,true);
         if (PHP_OS === 'Windows') {
             exec(sprintf("rd /s /q %s", escapeshellarg($hostDir)));
         } else {
