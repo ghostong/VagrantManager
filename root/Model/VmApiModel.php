@@ -161,6 +161,12 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
             $str .= "<p>". VAGRANT_DATA_DIR ."不可写,请修改目录权限.</p>";
         }
 
+        if(!is_dir(Model("Image")->getBoxDir())){
+            $str .= "<p>". Model("Image")->getBoxDir() ."不是有效目录,请自行创建.</p>";
+        }elseif(!is_writable(Model("Image")->getBoxDir())){
+            $str .= "<p>". Model("Image")->getBoxDir() ."不可写,请修改目录权限.</p>";
+        }
+
         //VAGRANT_PASSWORD
         if(!defined("VAGRANT_PASSWORD")){
             $str .= "<p> <mark>VAGRANT_PASSWORD</mark> 常量未定义,请在<mark>Config.php</mark>中定义. 此常量为默认虚拟机SSH登录密码</p>";

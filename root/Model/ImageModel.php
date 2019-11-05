@@ -3,6 +3,9 @@
 class ImageModel extends \Lit\LitMs\LitMsModel {
 
     function imageList(){
+        if(!is_dir($this->getBoxDir())){
+            return [];
+        }
         $fileIterator = new \FilesystemIterator( $this->getBoxDir() );
         $imageList = [];
         foreach($fileIterator as $fileInfo) {
