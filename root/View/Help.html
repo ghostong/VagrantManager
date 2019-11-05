@@ -1,0 +1,99 @@
+<html>
+
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8" />
+    <title>帮助</title>
+    <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="//cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <style>
+        body{
+            padding:20px;
+        }
+        .margin-top{
+            margin: 80px;
+        }
+        p{
+            padding-top:5px;
+            text-indent:2em;
+        }
+    </style>
+    <script>
+
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Vagrant Manager</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">回首页</a></li>
+                <li><a href="/vm/add">创建虚拟机</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid margin-top">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4>1. 运行依赖</h4>
+        </div>
+        <div class="panel-footer">
+            <h5>1.1 安装vagrant</h5>
+            <p>
+                1) 确认您的操作系统. 通过 vagrant 官网的 <a href="https://www.vagrantup.com/downloads.html" target="_blank">下载地址</a> 下载对应的 vagrant 安装包并安装.
+            </p>
+            <p>
+                2) 或通过 yum , apt-get 等软件包管理器自行安装.
+            </p>
+            <p>
+                3) 使用 <mark>vagrant --help</mark> 确认 vagrant 是否安装成功.
+            </p>
+            <br/>
+            <h5>1.2 安装VirtualBox </h5>
+            <p>
+                1) 通过 VirtualBox 官网的 <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">下载地址</a> 下载对应的 VirtualBox 安装包并安装.
+            </p>
+            <p>
+                2) 或通过 yum , apt-get 等软件包管理器自行安装.
+            </p>
+            <p>
+                3) 使用 <mark>virtualbox --help</mark> 确认 VirtualBox 是否安装成功.
+            </p>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4>2. 导入操作系统</h4>
+        </div>
+        <div class="panel-footer">
+            <h5>2.1 下载系统镜像</h5>
+            <p>
+                1) 运行虚拟机需要指定所需的操作系统, 通过 vagrant 官方的 <a href="https://app.vagrantup.com/boxes/search" target="_blank">镜像搜索</a> 工具搜索想要的操作系统镜像并下载.
+            </p>
+            <p>
+                2) 快捷下载地址: &nbsp;
+                <a href="http://cloud-images.ubuntu.com/bionic/20191104/bionic-server-cloudimg-amd64-vagrant.box" target="_blank">Ubuntu 18.04</a> &nbsp;
+                <a href="http://cloud-images.ubuntu.com/focal/20191029/focal-server-cloudimg-amd64-vagrant.box" target="_blank">Ubuntu 20.04</a> &nbsp;
+                <a href="https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1803_01.VirtualBox.box" target="_blank">CentOS 7</a>
+            </p>
+            <p>
+                3) 请不要使用官网提供的镜像使用方法创建虚拟机, 除非您的计算机能快速访问海外网络.
+            </p>
+            <h5>2.2 导入镜像</h5>
+            <p>
+                待续
+            </p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -11,6 +11,11 @@ class Controller extends Lit\LitMs\LitMsController {
             return View("AddVm.html");
         });
 
+        //帮助
+        $this->get('/vm/help',function (){
+            return View("Help.html");
+        });
+
         //获取可用操作系统
         $this->get('/api/opSystemList',function (){
             return Model("VmApi")->opSystemList();
