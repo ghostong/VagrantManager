@@ -16,6 +16,11 @@ class Controller extends Lit\LitMs\LitMsController {
             return View("Help.html");
         });
 
+        //导入镜像页面
+        $this->get('/vm/loadImage',function (){
+            return View("LoadImage.html");
+        });
+
         //获取可用操作系统
         $this->get('/api/opSystemList',function (){
             return Model("VmApi")->opSystemList();
@@ -65,5 +70,26 @@ class Controller extends Lit\LitMs\LitMsController {
         $this->get('/api/getVmStatus',function ($request){
             return Model("VmApi")->getVmStatus($request);
         });
+
+        //镜像列表
+        $this->get('/api/imageList',function (){
+            return Model("VmApi")->imageList();
+        });
+
+        //镜像导入
+        $this->post('/api/imageImport',function ($request){
+            return Model("VmApi")->imageImport($request);
+        });
+
+        //镜像导入
+        $this->post('/api/imageDelete',function ($request){
+            return Model("VmApi")->imageDelete($request);
+        });
+
+        //镜像列表
+        $this->get('/api/config',function (){
+            return Model("VmApi")->config();
+        });
+
     }
 }

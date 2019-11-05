@@ -6,7 +6,6 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
     function vagrantBoxList(){
         $cmd = "vagrant box list";
         $boxList = [];
-//        $execRet = $this->runCmd($cmd,true);
         exec($cmd,$execRet);
         foreach ($execRet as $str) {
             if(substr_count($str,"There are no installed boxes") == 0){
@@ -21,6 +20,7 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $vagrantConfig['hostId'] = isset($vagrantConfig['hostId']) ? $vagrantConfig['hostId'] : uniqid();
         $vagrantConfig['hostName'] = isset($vagrantConfig['hostName']) ? $vagrantConfig['hostName'] : $vagrantConfig['hostId'];
         $vagrantConfig['nickName'] = (isset($vagrantConfig['nickName']) && !empty($vagrantConfig['nickName'])) ? $vagrantConfig['nickName'] : $vagrantConfig['hostId'];
+        $vagrantConfig['passWord'] = defined("VAGRANT_PASSWORD") ? VAGRANT_PASSWORD : "123@456";
         $string = file_get_contents(VAGRANT_DATA_DIR."Vagrantfile");
         $vagrantFileString = \Lit\Litool\LiString::ReplaceStringVariable($string,$vagrantConfig);
         $vagrantDir = $this->getVagrantDir($vagrantConfig['hostId']);
@@ -53,14 +53,12 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
                 Model("Config")->updateConfig($hostId,['ipAddress'=>implode(",",$ipList)]);
             }
         });
-//        $this->runCmd($cmd);
     }
 
     //vagrant status
     function vagrantStatus( $hostId ){
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant status";
-//        $execRet = $this->runCmd($cmd,true);
         exec($cmd,$execRet);
         $tmpStr = implode('|',$execRet);
         $status = ["not created","poweroff","running","saved"];
@@ -106,11 +104,34 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         });
     }
 
+    //vagrant box add
+    function vagrantBoxAdd($imageFile,$imageName){
+        $imagePath = VAGRANT_DATA_DIR."Box".DIRECTORY_SEPARATOR.$imageFile;
+        go(function () use ($imagePath,$imageName) {
+            $cmd = "vagrant box add {$imageName} $imagePath";
+            echo $cmd;
+            co::exec($cmd);
+            Model("Image")->imageFileRename($imagePath,$imageName);
+        });
+        return true;
+    }
+
+    //vagrant box del
+    function vagrantBoxDelete ($imageFile,$imageName){
+        $imagePath = Model("Image")->getBoxDir().$imageFile;
+        go(function () use ($imagePath,$imageName) {
+            $cmd = "vagrant box remove {$imageName}";
+            echo $cmd;
+            co::exec($cmd);
+            Model("Image")->imageFileDelete($imagePath,$imageName);
+        });
+        return true;
+    }
+
     //vagrant provision
     function vagrantGetIp ( $hostId ) {
         $hostDir = $this->getVagrantDir( $hostId );
         $cmd = "cd {$hostDir} && vagrant provision";
-//        $execRet = $this->runCmd($cmd,true);
         exec($cmd,$execRet);
         $ret = [];
         foreach ($execRet as $value) {

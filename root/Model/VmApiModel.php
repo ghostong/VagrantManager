@@ -112,4 +112,71 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
         return Success(["hostId"=>$hostId,"status"=>$status]);
     }
 
+    //镜像列表
+    function imageList(){
+        $list = Model("Image")->imageList();
+        return Success(["imageDir"=>Model("Image")->getBoxDir(),"imageList"=>$list]);
+    }
+
+    //导入镜像
+    function imageImport ($request) {
+        $imageFile = $request->post["imageFile"];
+        $imageName = $request->post["imageName"];
+        if(Model("Vagrant")->vagrantBoxAdd($imageFile,$imageName)){
+            return Success();
+        }else{
+            return Error();
+        }
+    }
+
+    //删除镜像
+    function imageDelete ($request) {
+        $imageFile = $request->post["imageFile"];
+        $imageName = $request->post["imageName"];
+        if(Model("Vagrant")->vagrantBoxDelete($imageFile,$imageName)){
+            return Success();
+        }else{
+            return Error();
+        }
+    }
+
+    //配置目录
+    function config () {
+        $str = "";
+        //VAGRANT_ROOT
+        if(!defined("VAGRANT_ROOT")){
+            $str .= "<p> <mark>VAGRANT_ROOT</mark> 常量未定义,请在<mark>Config.php</mark>中定义.</p>";
+        }elseif(!is_dir(VAGRANT_ROOT)){
+            $str .= "<p>". VAGRANT_ROOT ."不是有效目录,请自行创建.</p>";
+        }elseif(!is_writable(VAGRANT_ROOT)){
+            $str .= "<p>". VAGRANT_ROOT ."不可写,请修改目录权限.</p>";
+        }
+
+        //VAGRANT_DATA_DIR
+        if(!defined("VAGRANT_DATA_DIR")){
+            $str .= "<p> <mark>VAGRANT_DATA_DIR</mark> 常量未定义,请在<mark>Config.php</mark>中定义.</p>";
+        }elseif(!is_dir(VAGRANT_DATA_DIR)){
+            $str .= "<p>". VAGRANT_DATA_DIR ."不是有效目录,请自行创建.</p>";
+        }elseif(!is_writable(VAGRANT_DATA_DIR)){
+            $str .= "<p>". VAGRANT_DATA_DIR ."不可写,请修改目录权限.</p>";
+        }
+
+        //VAGRANT_PASSWORD
+        if(!defined("VAGRANT_PASSWORD")){
+            $str .= "<p> <mark>VAGRANT_PASSWORD</mark> 常量未定义,请在<mark>Config.php</mark>中定义. 此常量为默认虚拟机SSH登录密码</p>";
+        }
+
+        //LITMS_OPEN_BASEDIR
+        if(!defined("LITMS_OPEN_BASEDIR")){
+            $str .= "<p> <mark>LITMS_OPEN_BASEDIR</mark> 常量未定义,请在<mark>Config.php</mark>中定义. 此常量为读取文件限制(安全)目录,不配置可能导致文件读取报错.</p>";
+        }
+        $def = "<p> 配置验证成功! </p>";
+
+        return Success([
+            "checkRresault" => $str ? : $def,
+            "boxDir"=>Model("Image")->getBoxDir(),
+            "passWord" => defined("VAGRANT_PASSWORD") ? VAGRANT_PASSWORD : "未定义",
+        ]);
+    }
+
 }

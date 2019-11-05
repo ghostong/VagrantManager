@@ -2,7 +2,7 @@
 
 <head>
     <meta http-equiv=Content-Type content="text/html;charset=utf-8" />
-    <title>帮助</title>
+    <title>Vagrant Manager - 帮助</title>
     <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="//cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -19,7 +19,14 @@
         }
     </style>
     <script>
-
+        $.ajax({
+            type:'get', url:'/api/config', cache: false, dataType:'json',
+            success:function(djson){
+                $("#configCheck").html(djson.response.checkRresault);
+                $("#boxDir").text(djson.response.boxDir);
+                $("#passWord").text(djson.response.passWord);
+            }
+        })
     </script>
 </head>
 <body>
@@ -33,6 +40,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/">回首页</a></li>
                 <li><a href="/vm/add">创建虚拟机</a></li>
+                <li><a href="/vm/loadImage">导入镜像</a></li>
             </ul>
         </div>
     </div>
@@ -41,29 +49,32 @@
 <div class="container-fluid margin-top">
     <div class="panel panel-default">
         <div class="panel-body">
+            <h4>0. 配置检测</h4>
+        </div>
+        <div class="panel-footer" id="configCheck">
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
             <h4>1. 运行依赖</h4>
         </div>
         <div class="panel-footer">
             <h5>1.1 安装vagrant</h5>
             <p>
-                1) 确认您的操作系统. 通过 vagrant 官网的 <a href="https://www.vagrantup.com/downloads.html" target="_blank">下载地址</a> 下载对应的 vagrant 安装包并安装.
+                1) 确认您的操作系统. 通过 vagrant 官网的 <a href="https://www.vagrantup.com/downloads.html" target="_blank">下载地址</a> 下载对应的 vagrant 安装包并安装,或通过 yum , apt-get 等软件包管理器自行安装.
             </p>
             <p>
-                2) 或通过 yum , apt-get 等软件包管理器自行安装.
-            </p>
-            <p>
-                3) 使用 <mark>vagrant --help</mark> 确认 vagrant 是否安装成功.
+                2) 使用 <mark>vagrant --help</mark> 确认 vagrant 是否安装成功.
             </p>
             <br/>
             <h5>1.2 安装VirtualBox </h5>
             <p>
-                1) 通过 VirtualBox 官网的 <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">下载地址</a> 下载对应的 VirtualBox 安装包并安装.
+                1) 通过 VirtualBox 官网的 <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">下载地址</a> 下载对应的 VirtualBox 安装包并安装,或通过 yum , apt-get 等软件包管理器自行安装.
             </p>
             <p>
-                2) 或通过 yum , apt-get 等软件包管理器自行安装.
-            </p>
-            <p>
-                3) 使用 <mark>virtualbox --help</mark> 确认 VirtualBox 是否安装成功.
+                2) 使用 <mark>virtualbox --help</mark> 确认 VirtualBox 是否安装成功.
             </p>
         </div>
     </div>
@@ -80,15 +91,52 @@
             <p>
                 2) 快捷下载地址: &nbsp;
                 <a href="http://cloud-images.ubuntu.com/bionic/20191104/bionic-server-cloudimg-amd64-vagrant.box" target="_blank">Ubuntu 18.04</a> &nbsp;
-                <a href="http://cloud-images.ubuntu.com/focal/20191029/focal-server-cloudimg-amd64-vagrant.box" target="_blank">Ubuntu 20.04</a> &nbsp;
-                <a href="https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1803_01.VirtualBox.box" target="_blank">CentOS 7</a>
+                <a href="https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1803_01.VirtualBox.box" target="_blank">CentOS 7</a> .
             </p>
             <p>
                 3) 请不要使用官网提供的镜像使用方法创建虚拟机, 除非您的计算机能快速访问海外网络.
             </p>
             <h5>2.2 导入镜像</h5>
             <p>
-                待续
+                1) 下载好镜像后,请将镜像文件上传至镜像保存目录.
+            </p>
+            <p>
+                2) 一般为 <mark>Config.php</mark> 文件中配置的 <mark>VAGRANT_DATA_DIR</mark> 常量目录下的 <mark>Box</mark> 目录.
+            </p>
+            <p>
+                3) 系统自动识别的当前配置目录为: <mark id="boxDir"></mark> .
+            </p>
+            <p>
+                4) 如果以上目录不存在,请自行创建.
+            </p>
+            <p>
+                5) 然后通过 <a href="/vm/loadImage">导入镜像</a> 页面进项操作.
+            </p>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4>3. 创建虚拟机</h4>
+        </div>
+        <div class="panel-footer">
+            <h5>3.1 操作系统</h5>
+            <p>
+                1) 此操作系统为 2.1 条中导入的系统镜像.
+            </p>
+            <h5>3.2 桥接网卡</h5>
+            <p>
+                1) 桥接网卡是为多网卡机器准备的功能, 用于为虚拟机指定桥接上网的配置. 请选择可以上网的网卡进行创建.
+            </p>
+            <h5>3.3 SSH默认密码</h5>
+            <p>
+                1) 一般为 <mark>Config.php</mark> 文件中配置的 <mark>VAGRANT_PASSWORD</mark> 常量值.
+            </p>
+            <p>
+                2) 系统自动识别的值为: <mark id="passWord"></mark> .
+            </p>
+            <p>
+                3) 无配置则为 123@456 .
             </p>
         </div>
     </div>

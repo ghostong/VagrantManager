@@ -7,7 +7,7 @@ define("LITMS_HTTP_HOST","0.0.0.0");
 //服务监听端口 默认值 8080
 define("LITMS_HTTP_PORT",8080);
 //服务Worker进程数 默认值 2
-define("LITMS_WORKER_NUM",2);
+define("LITMS_WORKER_NUM",20);
 //服务守护进程化 默认值 false
 define("LITMS_DAEMONIZE", false);
 //其他服务设置, 支持swoole_server::set 所有参数, 此参数会覆盖之前配置
@@ -16,9 +16,11 @@ define("SWOOLE_SERVER_SET",array(
 ));
 
 //自定义常量
-define("VAGRANT_ROOT","/home/ghost/vagrant/auto/");  //vagrant 文件保存目录
+define("VAGRANT_ROOT","/home/ghost/vagrant/auto/");  //vagrant 虚拟机文件保存目录
 
-define("VAGRANT_DATA_DIR",__DIR__.DIRECTORY_SEPARATOR."Data".DIRECTORY_SEPARATOR); //临时文件保存目录
+define("VAGRANT_DATA_DIR",__DIR__.DIRECTORY_SEPARATOR."Data".DIRECTORY_SEPARATOR); //系统文件保存目录
+
+define("VAGRANT_PASSWORD","123@456@"); //虚拟机ROOT默认密码
 
 //服务所读取文件限制(安全)目录
 //目录名称请以目录分隔符(DIRECTORY_SEPARATOR)结尾

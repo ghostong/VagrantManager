@@ -1,0 +1,117 @@
+<html>
+
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8" />
+    <title>Vagrant Manager - 导入镜像</title>
+    <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="//cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <style>
+        body{
+            padding:20px;
+        }
+        .margin-top{
+            margin: 80px;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            //镜像列表
+            $.ajax({
+                type:'get', url:"/api/imageList", cache: false, dataType:'json',
+                success:function(sjson){
+                    if(sjson.success == 1){
+                        $("#ImageDirSpan").text(sjson.response.imageDir);
+                        imageList = sjson.response.imageList;
+                        for( i = 0; i< imageList.length ; i ++ ){
+                            imageFile = imageList[i].imageFile;
+                            isImport = imageList[i].isImport;
+                            imageName = imageList[i].importName;
+                            if(isImport){
+                                disabled = "disabled";
+                            }else{
+                                disabled = "";
+                            }
+                            $("#imageListTable").append("<tr>" +
+                                "<td>"+(i+1)+"</td>" +
+                                "<td>"+imageFile+"</td>" +
+                                "<td><input type=\"text\" class=\"form-control\" "+disabled+" value=\""+imageName+"\" /></td>" +
+                                "<td>" +
+                                "<button imageFile=\""+imageFile+"\" type=\"button\" class=\"importImageButton btn btn-success btn-sm\" "+disabled+">导入</button> &nbsp;&nbsp;"+
+                                "<button imageFile=\""+imageFile+"\" imageName=\""+imageName+"\" type=\"button\" class=\"delImageButton btn btn-danger btn-sm\">删除</button>" +
+                                "</td>" +
+                                "</tr>");
+                        }
+                    }
+                    onImageList();
+                }
+            });
+
+            $("#reloadPage").attr("href","/vm/loadImage?_="+Math.random());
+        });
+
+        function onImageList() {
+            //导入
+            $(".importImageButton").click(function(){
+                tmp = $(this);
+                imageName = tmp.parent().prev().children().val();
+                if( imageName == ""){
+                    alert("请填写镜像别名");
+                    return false;
+                }
+                tmp.attr("disabled","disabled");
+                $.ajax({
+                    type:'post', url:'/api/imageImport', cache: false, data:"imageFile="+tmp.attr("imageFile")+"&imageName="+imageName, dataType:'json',
+                    success:function(djson){
+                        alert("操作已经执行,大约需要1分钟,请不要重复操作.");
+                    }
+                })
+            });
+
+            //删除
+            $(".delImageButton").click(function(){
+                tmp = $(this);
+                imageName = tmp.attr("imageName")
+                imageFile = tmp.attr("imageFile")
+                tmp.attr("disabled","disabled");
+                $.ajax({
+                    type:'post', url:'/api/imageDelete', cache: false, data:"imageFile="+tmp.attr("imageFile")+"&imageName="+imageName, dataType:'json',
+                    success:function(djson){
+                        alert("操作已经执行,大约需要1分钟,请不要重复操作.");
+                    }
+                })
+            });
+
+        }
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Vagrant Manager</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">回首页</a></li>
+                <li><a href="/vm/add">创建虚拟机</a></li>
+                <li><a href="/vm/help">帮助</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="panel panel-default margin-top">
+    <!-- Default panel contents -->
+    <div class="panel-heading"><span style="font-size:22px">镜像列表</span>&nbsp;&nbsp;<span style="color:red">镜像上传目录: <span id="ImageDirSpan"></span></span><span style="float:right"><a href="#" id="reloadPage">刷新</a></span></div>
+    <!-- Table -->
+    <table class="table" id="imageListTable">
+        <tr>
+            <th class="col-sm-1">序列</th> <th class="col-sm-4">镜像路径</th> <th class="col-sm-1">镜像别名</th> <th class="col-sm-1">操作</th>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
