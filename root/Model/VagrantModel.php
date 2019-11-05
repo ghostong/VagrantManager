@@ -109,7 +109,6 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $imagePath = VAGRANT_DATA_DIR."Box".DIRECTORY_SEPARATOR.$imageFile;
         go(function () use ($imagePath,$imageName) {
             $cmd = "vagrant box add {$imageName} $imagePath";
-            echo $cmd;
             co::exec($cmd);
             Model("Image")->imageFileRename($imagePath,$imageName);
         });
@@ -121,7 +120,6 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $imagePath = Model("Image")->getBoxDir().$imageFile;
         go(function () use ($imagePath,$imageName) {
             $cmd = "vagrant box remove {$imageName}";
-            echo $cmd;
             co::exec($cmd);
             Model("Image")->imageFileDelete($imagePath,$imageName);
         });
