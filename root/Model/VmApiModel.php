@@ -172,11 +172,12 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
         }
         $def = "<p> 配置验证成功! </p>";
 
-        return Success([
+        $success = array (
             "checkRresault" => $str ? : $def,
             "boxDir"=>Model("Image")->getBoxDir(),
             "passWord" => defined("VAGRANT_PASSWORD") ? VAGRANT_PASSWORD : "未定义",
-        ]);
+        );
+        return Success($success);
     }
 
 }
