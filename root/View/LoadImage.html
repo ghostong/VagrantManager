@@ -70,6 +70,9 @@
 
             //删除
             $(".delImageButton").click(function(){
+                if(!confirm("确认要删除此镜像?")){
+                    return false;
+                }
                 tmp = $(this);
                 imageName = tmp.attr("imageName")
                 imageFile = tmp.attr("imageFile")
