@@ -172,10 +172,6 @@ class VmApiModel extends \Lit\LitMs\LitMsModel {
             $str .= "<p> <mark>VAGRANT_PASSWORD</mark> 常量未定义,请在<mark>Server.php</mark>中定义. 此常量为默认虚拟机SSH登录密码</p>";
         }
 
-        //LITMS_OPEN_BASEDIR
-        if(!defined("LITMS_OPEN_BASEDIR")){
-            $str .= "<p> <mark>LITMS_OPEN_BASEDIR</mark> 常量未定义,请在<mark>Server.php</mark>中定义. 此常量为读取文件限制(安全)目录,不配置可能导致文件读取报错.</p>";
-        }
         $def = "<p> 配置验证成功! </p>";
 
         $success = array (
