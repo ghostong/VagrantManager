@@ -77,6 +77,10 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
             $hostDir = $this->getVagrantDir($hostId);
             $cmd = "cd {$hostDir} && vagrant reload ";
             co::exec($cmd);
+            $ipList = $this->vagrantGetIp($hostId);
+            if(!empty($ipList)){
+                Model("Config")->updateConfig($hostId,['ipAddress'=>implode(",",$ipList)]);
+            }
         });
     }
     //vagrant halt
@@ -94,13 +98,14 @@ class VagrantModel extends \Lit\LitMs\LitMsModel {
         $selfObj = $this;
         go(function () use ($hostId,$selfObj) {
             $hostDir = $this->getVagrantDir( $hostId );
-            $cmd = "cd {$hostDir} && vagrant destroy -f ";
-            co::exec($cmd);
+            $cmd = "cd {$hostDir} && vagrant destroy -f  && ";
             if (PHP_OS === 'Windows') {
-                exec(sprintf("rd /s /q %s", escapeshellarg($hostDir)));
+                $cmd .= sprintf("rd /s /q %s", escapeshellarg($hostDir));
             } else {
-                exec(sprintf("rm -rf %s", escapeshellarg($hostDir)));
+                $cmd .= sprintf("rm -rf %s", escapeshellarg($hostDir));
             }
+            co::exec($cmd);
+
         });
     }
 
