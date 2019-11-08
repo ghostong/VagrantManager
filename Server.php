@@ -1,6 +1,6 @@
 <?php
 //autoload
-require(dirname(__DIR__).'/vendor/autoload.php');
+require(__DIR__.'/vendor/autoload.php');
 
 //自定义常量
 define("VAGRANT_ROOT","/home/ghost/vagrant/auto/");  //vagrant 虚拟机文件保存目录
