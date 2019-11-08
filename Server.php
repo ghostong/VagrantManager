@@ -3,7 +3,7 @@
 require(__DIR__.'/vendor/autoload.php');
 
 //自定义常量
-define("VAGRANT_ROOT","/home/ghost/vagrant/auto/");  //vagrant 虚拟机文件保存目录
+define("VAGRANT_ROOT","/vagrant/auto/");  //vagrant 虚拟机文件保存目录
 
 define("VAGRANT_DATA_DIR",__DIR__.DIRECTORY_SEPARATOR."Data".DIRECTORY_SEPARATOR); //系统文件保存目录
 
