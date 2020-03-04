@@ -1,5 +1,5 @@
 <?php
-class VmApiModel extends \Lit\LitMs\LitMsModel {
+class VmApiModel extends \Lit\Ms\LitMsModel {
 
     //获取当前可用的操作系统
     function opSystemList(){

@@ -1,6 +1,6 @@
 <?php
 
-class ImageModel extends \Lit\LitMs\LitMsModel {
+class ImageModel extends \Lit\Ms\LitMsModel {
 
     function imageList(){
         if(!is_dir($this->getBoxDir())){

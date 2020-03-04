@@ -1,6 +1,6 @@
 <?php
 
-class VagrantModel extends \Lit\LitMs\LitMsModel {
+class VagrantModel extends \Lit\Ms\LitMsModel {
 
     //vagrant box list
     function vagrantBoxList(){

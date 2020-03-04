@@ -10,7 +10,7 @@ define("VAGRANT_DATA_DIR",__DIR__.DIRECTORY_SEPARATOR."Data".DIRECTORY_SEPARATOR
 define("VAGRANT_PASSWORD","123@456@"); //虚拟机ROOT默认密码
 
 
-$server = new \Lit\LitMs\LitMsServer();
+$server = new \Lit\Ms\LitMsServer();
 
 $server
         ->setHttpHost("0.0.0.0")    //设置监听host ip

@@ -1,5 +1,5 @@
 <?php
-class Controller extends Lit\LitMs\LitMsController {
+class Controller extends Lit\Ms\LitMsController {
     function __construct(){
         //首页
         $this->get('/',function (){

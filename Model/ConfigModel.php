@@ -1,6 +1,6 @@
 <?php
 
-class ConfigModel extends \Lit\LitMs\LitMsModel {
+class ConfigModel extends \Lit\Ms\LitMsModel {
 
     //获取vagrant配置目录
     function getConfigFile($hostId){
