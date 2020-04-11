@@ -13,7 +13,7 @@
 {
   "require": {
     "lit/litms": "dev-master",
-    "lit/litool": "dev-master"
+    "lit/utils": "dev-master"
   }
 }
 ````

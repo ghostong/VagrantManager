@@ -22,7 +22,7 @@ class VagrantModel extends \Lit\Ms\LitMsModel {
         $vagrantConfig['nickName'] = (isset($vagrantConfig['nickName']) && !empty($vagrantConfig['nickName'])) ? $vagrantConfig['nickName'] : $vagrantConfig['hostId'];
         $vagrantConfig['passWord'] = defined("VAGRANT_PASSWORD") ? VAGRANT_PASSWORD : "123@456";
         $string = file_get_contents(VAGRANT_DATA_DIR."Vagrantfile");
-        $vagrantFileString = \Lit\Litool\LiString::ReplaceStringVariable($string,$vagrantConfig);
+        $vagrantFileString = \Lit\Utils\LiString::ReplaceStringVariable($string,$vagrantConfig);
         $vagrantDir = $this->getVagrantDir($vagrantConfig['hostId']);
         if(is_dir($vagrantDir)){
             return -1;
