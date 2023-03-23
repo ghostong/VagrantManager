@@ -1,6 +1,7 @@
 <?php
 //autoload
 require(__DIR__.'/vendor/autoload.php');
+require(__DIR__.'/Common.php');
 
 //自定义常量
 define("VAGRANT_ROOT","/vagrant/auto/");  //vagrant 虚拟机文件保存目录
